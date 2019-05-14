@@ -63,8 +63,8 @@ spec:
                     def gitCount = sh(script: 'git rev-list --count HEAD', returnStdout: true).trim()
                     def gitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                     buildTag = sh(script: "echo ${BRANCH_NAME}.${gitCount}.${gitHash}", returnStdout: true).trim()
-                    def m = env.JOB_NAME =~ "(.*)/(.*)"
-                    ARTIFACTID = m[0][1]
+                    def m = env.JOB_NAME =~ "(.*)/(.*)/(.*)"
+                    ARTIFACTID = m[0][2]
 		    echo "a=${ARTIFACTID}"
 		    echo "b=${buildTag}"
 		    echo "m=${m}"
