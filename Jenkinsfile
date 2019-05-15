@@ -88,7 +88,8 @@ spec:
                 script {
                     if(env.BRANCH_NAME =~ /^(master|develop)$/) {
                         container('dind') {
-                            withDockerRegistry([ credentialsId: "DockerHub", url: "https://cloud.docker.com" ]) {
+                            //withDockerRegistry([ credentialsId: "DockerHub", url: "https://cloud.docker.com" ]) {
+                            withDockerRegistry([ credentialsId: "DockerHub" ]) {
                                 customImage.push()
                                 customImage.push("latest")
                             }
