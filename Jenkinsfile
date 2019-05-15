@@ -65,41 +65,38 @@ spec:
                     buildTag = sh(script: "echo ${BRANCH_NAME}.${gitCount}.${gitHash}", returnStdout: true).trim()
                     def m = env.JOB_NAME =~ "(.*)/(.*)/(.*)"
                     ARTIFACTID = m[0][2]
-		    echo "a=${ARTIFACTID}"
-		    echo "b=${buildTag}"
-		    echo "m=${m}"
                 }
             }
         }
 
-//        stage('Package') {
-//            steps {
-//                script {
-//                    container('dind') {
-//                        if(env.BRANCH_NAME == "master") {
-//                            customImage = docker.build("zhanghuiin/evatarco/${ARTIFACTID}:${buildTag}", "--build-arg DEPLOY_ENV=prod --pull .")
-//                        } else if(env.BRANCH_NAME == "develop") {
-//                            customImage = docker.build("zhanghuiin/evatarco/${ARTIFACTID}:${buildTag}", "--build-arg DEPLOY_ENV=sit --pull .")
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        stage('Publish') {
-//            steps {
-//                script {
-//                    if(env.BRANCH_NAME =~ /^(master|develop)$/) {
-//                        container('dind') {
-//                            withDockerRegistry([ credentialsId: "evatar_5252play_pb_hub", url: "https://registry.5252play.com" ]) {
-//                                customImage.push()
-//                                customImage.push("latest")
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        stage('Package') {
+            steps {
+                script {
+                    container('dind') {
+                        if(env.BRANCH_NAME == "master") {
+                            customImage = docker.build("zhanghuiin/${ARTIFACTID}:${buildTag}", "--build-arg DEPLOY_ENV=prod --pull .")
+                        } else if(env.BRANCH_NAME == "develop") {
+                            customImage = docker.build("zhanghuiin/${ARTIFACTID}:${buildTag}", "--build-arg DEPLOY_ENV=sit --pull .")
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                script {
+                    if(env.BRANCH_NAME =~ /^(master|develop)$/) {
+                        container('dind') {
+                            withDockerRegistry([ credentialsId: "DockerHub", url: "https://cloud.docker.com" ]) {
+                                customImage.push()
+                                customImage.push("latest")
+                            }
+                        }
+                    }
+                }
+            }
+        }
 //
 //        stage('Deploy') {
 //            steps {
