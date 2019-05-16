@@ -105,7 +105,7 @@ spec:
                     container('ansible') {
                         if(env.BRANCH_NAME == "develop") {
                             dir('deployer') {
-                                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '45726113-1765-4845-ba78-a04bbeb858b0', url: 'git@github.com:zhanghuiin0/deployer.git']]])
+                                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'zhanghuiin0', url: 'https://github.com/zhanghuiin0/deployer.git']]])
                                 dir('ansible-hyman-test01-test-deployer/') {
                                     sshagent(credentials: ['HymanTestDeployer']) {
                                         sh """ansible-playbook -b deployer.yml -e 'artifactId=${ARTIFACTID} build=${buildTag}'"""
